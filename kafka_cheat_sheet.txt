@@ -1,0 +1,103 @@
+1. start the zookeeper
+	zookeeper-server-start.bat C:/kafka_2.13-2.6.0/config/zookeeper.properties
+	
+2. start the kafka server (broker)
+	kafka-server-start.bat C:/kafka_2.13-2.6.0/config/server.properties
+	
+3. create kafka topics
+	// via zookeeper
+	kafka-topics.bat --zookeeper localhost:2181 --topic first_topic --partitions 3 --replication-factor 1 --create
+	// via bootstrap-server
+	kafka-topics.bat --bootstrap-server  localhost:9092 --topic car_data --partitions 3 --replication-factor 1 --create
+
+4. produce data to kafka
+	// without produce-property
+	kafka-console-producer.bat --broker-list localhost:9092 --topic fist_topic
+	// with produce-property
+	kafka-console-producer.bat --broker-list localhost:9092 --topic fist_topic --producer-property acks=all
+	
+5. consume data from kafka
+	kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic car_data
+	// from beginning
+	kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic __consumer_offsets --from-beginning
+	
+6. consumer groups
+	kafka-consumer-groups.bat --bootstrap-server localhost:9092 --describe --group my-consumer-group
+	//reset offset
+	
+****************************************************java******************************
+producer config
+acks = 1
+batch.size = 16384
+bootstrap.servers = [localhost:9092]
+buffer.memory = 33554432
+client.id = 
+compression.type = none
+connections.max.idle.ms = 540000
+enable.idempotence = false
+interceptor.classes = []
+key.serializer = class org.apache.kafka.common.serialization.StringSerializer
+linger.ms = 0
+max.block.ms = 60000
+max.in.flight.requests.per.connection = 5
+max.request.size = 1048576
+metadata.max.age.ms = 300000
+metric.reporters = []
+metrics.num.samples = 2
+metrics.recording.level = INFO
+metrics.sample.window.ms = 30000
+partitioner.class = class org.apache.kafka.clients.producer.internals.DefaultPartitioner
+receive.buffer.bytes = 32768
+reconnect.backoff.max.ms = 1000
+reconnect.backoff.ms = 50
+request.timeout.ms = 30000
+retries = 0
+retry.backoff.ms = 100
+sasl.client.callback.handler.class = null
+sasl.jaas.config = null
+sasl.kerberos.kinit.cmd = /usr/bin/kinit
+sasl.kerberos.min.time.before.relogin = 60000
+sasl.kerberos.service.name = null
+sasl.kerberos.ticket.renew.jitter = 0.05
+sasl.kerberos.ticket.renew.window.factor = 0.8
+sasl.login.callback.handler.class = null
+sasl.login.class = null
+sasl.login.refresh.buffer.seconds = 300
+sasl.login.refresh.min.period.seconds = 60
+sasl.login.refresh.window.factor = 0.8
+sasl.login.refresh.window.jitter = 0.05
+sasl.mechanism = GSSAPI
+security.protocol = PLAINTEXT
+send.buffer.bytes = 131072
+ssl.cipher.suites = null
+ssl.enabled.protocols = [TLSv1.2, TLSv1.1, TLSv1]
+ssl.endpoint.identification.algorithm = https
+ssl.key.password = null
+ssl.keymanager.algorithm = SunX509
+ssl.keystore.location = null
+ssl.keystore.password = null
+ssl.keystore.type = JKS
+ssl.protocol = TLS
+ssl.provider = null
+ssl.secure.random.implementation = null
+ssl.trustmanager.algorithm = PKIX
+ssl.truststore.location = null
+ssl.truststore.password = null
+ssl.truststore.type = JKS
+transaction.timeout.ms = 60000
+transactional.id = null
+value.serializer = class org.apache.kafka.common.serialization.StringSerializer
+
+##secure producer
+acks = all
+enable.idempotence = true
+retries = Integer.MAX_VALUE	
+max.in.flight.requests.per.connection = 5
+
+*****************
+## increase throughput
+compression.type = snappy
+linger.ms = 20
+batch.size = 32*1024
+
+	
